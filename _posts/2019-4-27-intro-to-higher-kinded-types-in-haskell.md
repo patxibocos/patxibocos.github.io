@@ -15,7 +15,7 @@ But... Can you define in Java something like "any container holding a String"? T
 
 Let's say we have a User data type:
 
-```
+```haskell
 data User = User
   { name :: String
   , age  :: Int
@@ -24,7 +24,7 @@ data User = User
 
 and a function that receives a given user name and returns a Maybe of User:
 
-```
+```haskell
 userByName :: String -> Maybe User
 userByName name
   | name == "haskell" = Just $ User name 29
@@ -35,7 +35,7 @@ This function receives a String and in this simple case, if it is equals to "has
 
 So now we are going to define a new function which will receive a String and then look for an optional User and return its age in case the user exists. This function will basically use the previous one and then obtain user's age if it exists. We could think on doing this:
 
-```
+```haskell
 ageForUser :: String -> Maybe Int
 ageForUser name = fmap age (userByName name)
 ```
@@ -44,7 +44,7 @@ This works and it's fine, but this function is needlessly coupled to Maybe. Does
 
 We want to have something like this:
 
-```
+```haskell
 ageForUser :: String -> a Int
 ageForUser name = fmap age (userByName name)
 ```
@@ -53,14 +53,14 @@ But this will not compile, here we are trying to say: given a String parameter, 
 
 What we are going to do is receive the userByName function as a parameter, so that it will bring us the type:
 
-```
+```haskell
 ageForUser :: String -> (String -> a User) -> a Int
 ageForUser name userFinder = fmap age (userFinder name)
 ```
 
 But this does not still work :( Why? The problem now is that we cannot call fmap function for a type that does not meet the Functor type class. Let's put the constraint then:
 
-```
+```haskell
 ageForUser :: Functor a => String -> (String -> a User) -> a Int
 ageForUser name userFinder = fmap age (userFinder name)
 ```
