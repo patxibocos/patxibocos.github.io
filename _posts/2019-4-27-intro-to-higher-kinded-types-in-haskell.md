@@ -61,7 +61,8 @@ ageForUser name userFinder = fmap age (userFinder name)
 But this does not still work :( Why? The problem now is that we cannot call fmap function for a type that does not meet the Functor type class. Let's put the constraint then:
 
 ```haskell
-ageForUser :: Functor a => String -> (String -> a User) -> a Int
+ageForUser :: Functor a => String -> (String -> a User) ->
+a Int
 ageForUser name userFinder = fmap age (userFinder name)
 ```
 
