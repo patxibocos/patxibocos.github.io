@@ -33,7 +33,7 @@ userByName name
 
 This function receives a String and in this simple case, if it is equals to "haskell" then returns a Maybe value with a User, and Nothing value otherwise.
 
-So now we are going to define a new function which will receive a String and then look for an optional User and returns it age in case it exists. This function will basically use the previous one and then obtain user's age if it exists. We could think on doing this:
+So now we are going to define a new function which will receive a String and then look for an optional User and return its age in case the user exists. This function will basically use the previous one and then obtain user's age if it exists. We could think on doing this:
 
 ```
 ageForUser :: String -> Maybe Int
@@ -49,7 +49,7 @@ ageForUser :: String -> a Int
 ageForUser name = fmap age (userByName name)
 ```
 
-But this will not compile, here we are trying to say: given a String parameter, we want to return a Maybe String in our particular case (a will be the Maybe "hole"). But we cannot define the function this way as the function return type is open for every type whose kind is (* -> *). A client of this function will not have any way to have the concrete type, that's why the compiler even does not allow us doing it. In some way the function type signature does not meet referential transparency (at type level).
+But this will not compile, here we are trying to say: given a String parameter, we want to return a Maybe String in our particular case (`a` will be the Maybe "hole"). But we cannot define the function this way as the function return type is open for every type whose kind is (* -> *). A client of this function will not have any way to know the concrete type, that's why the compiler even does not allow us doing it. In some way the function type signature does not meet referential transparency (at type level).
 
 What we are going to do is receive the userByName function as a parameter, so that it will bring us the type:
 
@@ -58,7 +58,7 @@ ageForUser :: String -> (String -> a User) -> a Int
 ageForUser name userFinder = fmap age (userFinder name)
 ```
 
-But this does not still work :( Why? The problem now is that we cannot call fmap function for a type that does not meet the Functor type class. Let's set the constraint then:
+But this does not still work :( Why? The problem now is that we cannot call fmap function for a type that does not meet the Functor type class. Let's put the constraint then:
 
 ```
 ageForUser :: Functor a => String -> (String -> a User) -> a Int
